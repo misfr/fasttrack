@@ -1,0 +1,20 @@
+{
+    "name": "misfr/fasttrack",
+    "version": "dev-master",
+    "type": "library",
+    "description": "FastTrack, lightweight PHP MVC engine",
+    "keywords": ["php","mvc","framework"],
+    "homepage": "https://github.com/misfr/fasttrack",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Frederic BAYLE"
+        }
+    ],
+    "require": {
+        "php": ">=7.0.0"
+    },
+    "autoload": {
+        "files": ["FastTrack.php"]
+    }
+}
