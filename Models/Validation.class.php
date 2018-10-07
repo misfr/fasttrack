@@ -254,4 +254,68 @@ class Validation extends ObjectBase {
     }
     return true;
   }
+
+  public static function getFieldValue($pData, $pFieldName) {
+
+  }
+
+  /**
+   * Validate an associative array or an object 
+   * 
+   * $pConfig format : ['FieldName:ValidationType' => [Message, Operator/Pattern, CompareValue, CompareMaxValue], ... ]
+   *
+   * Validation types : required, regex, email, int, float, date
+   * 
+   * @param   array|object  $pData            Data to validate (object or associative array)
+   * @param   array         $pConfig          Validation configuration
+   */  
+  public static function validate($pData, $pConfig) {
+    // For each configuration value
+    foreach ($pConfig as $ConfigKey => $ConfigValue) {
+      // Try to determine the field to validate and the validation type
+      $TabKey = Str::split($ConfigKey, ':');
+      if(count($TabKey) == 1) {
+        $TabKey[1] = 'required';  // required is the validation type by default
+      }
+
+      // Try to determine to the field value
+      $FieldValue = null;
+      if(is_array($pData) ? array_key_exists($TabKey[0], $pData) : false) {
+        $FieldValue = $pData[$TabKey[0]];     // Array value
+      }
+      else if(is_object($pData) ? property_exists($pData, $TabKey[0]) : false) {
+        $FieldValue = $pData->{$TabKey[0]};   // Object proprty
+      }
+
+      $ValidationResult = true;
+      if($TabKey[1] == 'required') {  // Required field
+        $ValidationResult = Validation::validateRequired($FieldValue);
+      }
+      else if($TabKey[1] == 'regex') {  // Regular expression
+        $ValidationResult = Validation::validateRegex($FieldValue, $ConfigValue[1]);
+      }
+      else if($TabKey[1] == 'email') {  // Email address
+        $ValidationResult = Validation::validateEmail($FieldValue);
+      }
+      else if($TabKey[1] == 'int' || $TabKey[1] == 'float' || $TabKey[1] == 'date') {   // Int, Float, Date
+        $Operator = isset($ConfigValue[1]) ? $ConfigValue[1] : Validation::OPERATOR_TYPECHECK;
+        $CompareValue = isset($ConfigValue[2]) ? $ConfigValue[2] : null;
+        $CompareMaxValue = isset($ConfigValue[3]) ? $ConfigValue[3] : null;
+        if($TabKey[1] == 'int') {  // Int number
+          $ValidationResult = Validation::validateInt($FieldValue, $Operator, $CompareValue, $CompareMaxValue);
+        }
+        else if($TabKey[1] == 'float') {  // Float number
+          $ValidationResult = Validation::validateFloat($FieldValue, $Operator, $CompareValue, $CompareMaxValue);
+        }
+        else if($TabKey[1] == 'date') {  // Date
+          $ValidationResult = Validation::validateDate($FieldValue, $Operator, $CompareValue, $CompareMaxValue);
+        }
+      }
+
+      // Check result
+      if(!$ValidationResult) {
+        throw new \Exception($ConfigValue[0]);
+      }
+    }
+  }
 }

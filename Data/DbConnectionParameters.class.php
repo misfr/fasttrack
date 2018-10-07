@@ -24,7 +24,7 @@ class DbConnectionParameters extends ObjectBase {
    * 01 [
    * 02 'host' => 'localhost',
    * 03 'port' => '3306',
-   * 04 'dbName' => 'db',
+   * 04 'dbname' => 'db',
    * 05 'user' => 'root',
    * 06 'password' => 'pwd',
    * 07 'charset' => 'utf8',
