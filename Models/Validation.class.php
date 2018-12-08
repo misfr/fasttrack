@@ -93,7 +93,7 @@ class Validation extends ObjectBase {
    */
   public static function validateRegex($pFieldValue, $pRegexPattern) {
     if (!Str::isNullOrEmpty($pFieldValue)) {
-      if (!preg_match(Str::replace($pRegexPattern, '/', '\/'), $pFieldValue)) {
+      if (!preg_match('/' . Str::replace($pRegexPattern, '/', '\/') . '/', $pFieldValue)) {
         return false;
       }
     }
