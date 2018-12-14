@@ -80,6 +80,17 @@ class Router extends ObjectBase {
     $UrlComponents = explode('?', $pUrl);
     $Url = $UrlComponents[0];
     
+    // If in CLI server mode, try to serve the requested file if it exists
+    if(php_sapi_name() == 'cli-server') {
+      $RealRequestedFilePath = Config::$AppWebRootPath . $Url;
+      
+      // Checks if the file exists
+      if(file_exists($RealRequestedFilePath)) {
+        // The requested file exists, return false to tell to the PHP engine to serve the file
+        return false;
+      }
+    }
+
     // Check if the given URL is a FastTrack resource
     if(Str::startsWith($Url, '/_fasttrack/action/')) {
       // Direct action call, extract ClassName and method
@@ -119,17 +130,6 @@ class Router extends ObjectBase {
         
         // The route pattern and the method matche with the given URL, 
         return Router::renderRouteToString($RouteName, $ActionParameters);
-      }
-    }
-    
-    // No route found, if in CLI server mode, try to serve the requested file
-    if(php_sapi_name() == 'cli-server') {
-      $RealRequestedFilePath = Config::$AppWebRootPath . $Url;
-      
-      // Checks if the file exists
-      if(file_exists($RealRequestedFilePath)) {
-        // The requested file exists, return false to tell to the PHP engine to serve the file
-        return false;
       }
     }
     
