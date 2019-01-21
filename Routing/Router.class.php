@@ -12,6 +12,7 @@ use FastTrack\ObjectBase;
 use FastTrack\Controllers\ControllerBase;
 use FastTrack\Security\XssInjection;
 use FastTrack\Str;
+use FastTrack\IO\File;
 
 /**
  * FastTrack router
@@ -85,7 +86,7 @@ class Router extends ObjectBase {
       $RealRequestedFilePath = Config::$AppWebRootPath . $Url;
       
       // Checks if the file exists
-      if(file_exists($RealRequestedFilePath)) {
+      if(File::exists($RealRequestedFilePath)) {
         // The requested file exists, return false to tell to the PHP engine to serve the file
         return false;
       }
