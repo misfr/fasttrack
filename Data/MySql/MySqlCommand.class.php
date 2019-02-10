@@ -24,13 +24,11 @@ class MySqlCommand extends DbCommand {
   protected $_Statement;
 
   /**
-   * Execute one or more queries without returning result
+   * Prepare the query to execute
    * 
    * @throws \Exception
    */
-  public function executeNonQuery() {
-    parent::executeNonQuery();
-
+  protected function prepareQuery() {
     /** @var \PDO $PDOObject */
     $PDOObject = $this->_Cnx->CnxObject;
     $this->_Statement = $PDOObject->prepare($this->CommandText);
@@ -93,6 +91,17 @@ class MySqlCommand extends DbCommand {
   }
 
   /**
+   * Execute one or more queries that returns nothing
+   * 
+   * @throws \Exception
+   */
+  public function executeNonQuery() {
+    parent::executeNonQuery();
+    $this->prepareQuery();
+    $this->_Statement->closeCursor();
+  }
+
+  /**
    * Execute one or more queries and returns the first available result
    * 
    * @param   \Closure|null    $pStrongTypeCallBack     Callback function to call to string type the result
@@ -100,8 +109,9 @@ class MySqlCommand extends DbCommand {
    * @return  mixed                                     Value of the first column of the first returned line
    */
   public function executeScalar($pStrongTypeCallBack = null) {
+    parent::executeScalar($pStrongTypeCallBack);
     $ReturnValue = null;
-    $this->executeNonQuery();
+    $this->prepareQuery();
     $Result = null;
 
     // Last result set
@@ -124,6 +134,8 @@ class MySqlCommand extends DbCommand {
       $ReturnValue = $pStrongTypeCallBack($ReturnValue);
     }
 
+    $this->_Statement->closeCursor();
+
     return $ReturnValue;
   }
 
@@ -135,8 +147,9 @@ class MySqlCommand extends DbCommand {
    * @return  array                                     Results of the last query
    */
   public function executeReader($pStrongTypeCallBacks = null) {
+    parent::executeReader($pStrongTypeCallBacks);
     $ReturnValue = null;
-    $this->executeNonQuery();
+    $this->prepareQuery();
 
     // Last result set
     do {
@@ -155,6 +168,8 @@ class MySqlCommand extends DbCommand {
         }
       }
     }
+
+    $this->_Statement->closeCursor();
 
     return $ReturnValue;
   }
