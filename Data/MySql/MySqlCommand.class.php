@@ -54,8 +54,11 @@ class MySqlCommand extends DbCommand {
           break;
         case DbParameter::TYPE_FLOAT:
           $ParamType = \PDO::PARAM_STR;
-          if($ParamItem->Value !== null && !Convert::tryParseFloat($ParamItem->Value, $ParamItem->Value)) {
-            throw new \Exception("Unable to convert the parameter $ParamName to a float number.");
+          if($ParamItem->Value !== null) {
+            if(!Convert::tryParseFloat($ParamItem->Value, $ParamItem->Value)) {
+              throw new \Exception("Unable to convert the parameter $ParamName to a float number.");
+            }
+            $ParamItem->Value = sprintf("%.{$ParamItem->FloatPrecision}f", $ParamItem->Value);
           }
           break;
         case DbParameter::TYPE_DATETIME:

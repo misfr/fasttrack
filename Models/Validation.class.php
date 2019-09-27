@@ -111,10 +111,9 @@ class Validation extends ObjectBase {
    */
   public static function validateInt($pFieldValue, $pOperator = Validation::OPERATOR_TYPECHECK, $pValueToCompare = null, $pMaxValueToCompare = null) {
     if (!Str::isNullOrEmpty($pFieldValue)) {
-      if (!preg_match('/^-?[0-9]+$/', $pFieldValue)) {
+      if (!Convert::tryParseInt($pFieldValue, $pFieldValue)) {
         return false;
       }
-      $pFieldValue = intval($pFieldValue);
 
       // We must compare the value
       if ($pOperator != Validation::OPERATOR_TYPECHECK) {
@@ -158,10 +157,9 @@ class Validation extends ObjectBase {
    */
   public static function validateFloat($pFieldValue, $pOperator = Validation::OPERATOR_TYPECHECK, $pValueToCompare = null, $pMaxValueToCompare = null) {
     if (!Str::isNullOrEmpty($pFieldValue)) {
-      if (!preg_match('/^-?[0-9]+(\.[0-9]+)?$/', $pFieldValue)) {
+      if (!Convert::tryParseFloat($pFieldValue, $pFieldValue)) {
         return false;
       }
-      $pFieldValue = floatval($pFieldValue);
       
       // We must compare the value
       if ($pOperator != Validation::OPERATOR_TYPECHECK) {

@@ -77,11 +77,18 @@ class DbParameter extends ObjectBase {
   public $Direction;
 
   /**
-   * Length of the parameter
+   * Length of the parameter (string only)
    * 
    * @var int
    */
   public $Length;
+
+  /**
+   * Float numbers precision (6 by defaut)
+   * 
+   * @var int
+   */
+  public $FloatPrecision;
 
   /**
    * Type of the parameter (const TYPE_xxx)
@@ -105,6 +112,7 @@ class DbParameter extends ObjectBase {
     $this->EmptyStringToNull = true;
     $this->Direction = DbParameter::DIRECTION_INPUT;
     $this->Length = 0;
+    $this->FloatPrecision = 6;
     $this->Type = DbParameter::TYPE_STRING;
     $this->Value = '';
   }

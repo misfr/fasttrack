@@ -131,7 +131,7 @@ class Convert extends ObjectBase {
    */
   public static function toFloat($pInputValue) {
     $ReturnValue = Str::replace($pInputValue, Localization::$CurrentLocale->DecimalSeparator, '.');
-    if(!preg_match('/^-?[0-9]+(\.[0-9]+)?$/', $ReturnValue)) {
+    if(!preg_match('/^-?[0-9]+(\.[0-9]+)?(e-?[0-9]+)?$/i', $ReturnValue)) {
       throw new \Exception("Can't convert $ReturnValue to a float number.");
     }
     return floatval($ReturnValue);
