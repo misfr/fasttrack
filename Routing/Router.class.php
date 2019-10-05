@@ -93,11 +93,11 @@ class Router extends ObjectBase {
     }
 
     // Check if the given URL is a FastTrack resource
-    if(Str::startsWith($Url, '/_fasttrack/action/')) {
+    if(Str::startsWith($Url, Config::$DirectActionUrlPrefix)) {
       // Direct action call, extract ClassName and method
       $RxActionCallResult = null;
-      if(!preg_match('/^\/_fasttrack\/action\/(?<controller>.+?)\.(?<method>.+?)(?:\?.+)?$/', $Url, $RxActionCallResult)) {
-        throw new \Exception("The given url doesn't match the direct action call protocol (/_fasttrack/action/Namespace/Controller.method?param1=xxx).");
+      if(!preg_match('/^' . Str::replace(Config::$DirectActionUrlPrefix, '/', '\/') . '(?<controller>.+?)\.(?<method>.+?)(?:\?.+)?$/', $Url, $RxActionCallResult)) {
+        throw new \Exception("The given url doesn't match the direct action call protocol (" . Config::$DirectActionUrlPrefix . "Namespace/Controller.method?param1=xxx).");
       }
       
       // Try to instanciate the controller

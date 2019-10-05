@@ -79,6 +79,13 @@ class Config extends ObjectBase {
   public static $Debug = false;
   
   /**
+   * Direct action call URL prefix
+   *
+   * @var string
+   */
+  public static $DirectActionUrlPrefix = '/_fasttrack/action/';
+
+  /**
    * Route to render an error occurs
    *
    * @var string|null
