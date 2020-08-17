@@ -76,9 +76,9 @@ function fasttrackExceptionHandler($exception) {
 function fasttrackShutDownHandler() {
   // Fatal error handling
   $last_error = error_get_last();
-  
+
   // If fatal error occured, convert it to an exception
-  if ($last_error['type'] == E_ERROR) {
+  if ($last_error !== NULL ? $last_error['type'] == E_ERROR : false) {
     fasttrackErrorHandler($last_error['type'], $last_error['message'], $last_error['file'], $last_error['line']);
   }
 }
