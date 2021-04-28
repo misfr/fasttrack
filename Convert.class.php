@@ -177,6 +177,26 @@ class Convert extends ObjectBase {
    * @return  bool                        Flag that determines whether the value was successfully converted
    */
   public static function tryParseDateTime($pInputValue, &$pOutputValue) {
+    // First try the standard formats
+    $stdFormats = [
+      \DateTime::RFC3339, // "Y-m-d\TH:i:sP" ;
+      \DateTime::RFC3339_EXTENDED, // "Y-m-d\TH:i:s.vP" ;
+      \DateTime::ATOM, // "Y-m-d\TH:i:sP"
+      \DateTime::ISO8601, // "Y-m-d\TH:i:sO";
+      'Y-m-d',  // Database short date format
+      'Y-m-d H:i', // Database short datetime format
+      'Y-m-d H:i:s' // Database short datetime format with seconds
+    ];
+    for($i = 0; $i < count($stdFormats); $i++) {
+      $pOutputValue = \DateTime::createFromFormat($stdFormats[$i], $pInputValue);
+      if($pOutputValue !== false) {
+        // This format is ok, exit
+        $pOutputValue->setTimezone(new \DateTimeZone(date_default_timezone_get()));
+        return true;
+      }
+    }
+
+    // Try other formats
     $pOutputValue = new \DateTime();
     $NbDaysMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
